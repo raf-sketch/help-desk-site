@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Help Desk</title>
+<style>
+:root{--bg:#f6f8fa;--card:#fff;--ink:#1d2733;--mute:#5b6775;--accent:#1f6f8b;--line:#dde3ea}
+*{box-sizing:border-box}
+body{margin:0;font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--ink);background:var(--bg)}
+header{background:var(--accent);color:#fff;padding:2rem 1rem;text-align:center}
+header h1{margin:0 0 .25rem;font-size:1.8rem}
+header p{margin:0 0 1rem;opacity:.9}
+#search{width:100%;max-width:520px;padding:.8rem 1rem;border:0;border-radius:8px;font-size:1rem}
+main{max-width:900px;margin:0 auto;padding:1rem}
+h2{margin:1.5rem 0 .75rem}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.75rem}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:1rem;text-decoration:none;color:inherit}
+.tile:hover,.tile:focus{border-color:var(--accent)}
+.tile h3{margin:0 0 .3rem;font-size:1rem}
+.tile span{color:var(--accent);font-size:.85rem}
+.prod{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:.25rem 1rem 1rem;margin:1rem 0}
+details{border-top:1px solid var(--line);padding:.6rem 0}
+summary{cursor:pointer;font-weight:600}
+details p{margin:.5rem 0 0;color:var(--mute)}
+form{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:1rem}
+label{display:block;font-weight:600;margin:.8rem 0 .25rem}
+select,input,textarea{width:100%;padding:.65rem;border:1px solid var(--line);border-radius:6px;font:inherit}
+.warn{background:#fff4e0;border:1px solid #f0c36d;border-radius:6px;padding:.6rem;font-size:.9rem;margin-top:.4rem}
+button{margin-top:1rem;background:var(--accent);color:#fff;border:0;padding:.8rem 1.4rem;border-radius:6px;font-size:1rem;cursor:pointer}
+.note{color:var(--mute);font-size:.85rem}
+#none{display:none;color:var(--mute)}
+footer{text-align:center;color:var(--mute);padding:2rem 1rem;font-size:.9rem}
+</style>
+</head>
+<body>
+<header>
+<h1>Help Desk</h1>
+<p>Find answers or get in touch.</p>
+<input id="search" type="search" placeholder="Search FAQs" aria-label="Search FAQs">
+</header>
+<main>
+<h2>Pick your product</h2>
+<div class="tiles">
+<a class="tile" href="#faq-aliquot" data-site="aliquot"><h3>Aliquot</h3><span>View FAQs</span></a>
+<a class="tile" href="#faq-precisely" data-site="precisely"><h3>Precisely Skin</h3><span>View FAQs</span></a>
+<a class="tile" href="#faq-synaps" data-site="synaps"><h3>Synaps</h3><span>View FAQs</span></a>
+<a class="tile" href="#faq-bloodwork" data-site="bloodwork"><h3>Bloodwork Studio / Optimal DX</h3><span>View FAQs</span></a>
+<a class="tile" href="#faq-peptidedoctor" data-site="peptidedoctor"><h3>Peptide Doctor</h3><span>View FAQs</span></a>
+</div>
+<div id="faqs">
+<section class="prod" id="faq-aliquot"><h2>Aliquot</h2>
+<details><summary>What is Aliquot?</summary><p>Aliquot is a separate business from Synaps.</p></details>
+<details><summary>I cannot log in</summary><p>We do not have verified details for this yet. Contact us below and we will help.</p></details>
+<details><summary>Where is my order?</summary><p>We do not have verified details for this yet. Contact us below and we will help.</p></details>
+<details><summary>Where do I find my report?</summary><p>We do not have verified details for this yet. Contact us below and we will help.</p></details>
+<details><summary>I have a billing or refund question</summary><p>Contact us below.</p></details>
+</section>
+<section class="prod" id="faq-precisely"><h2>Precisely Skin</h2>
+<details><summary>I cannot log in</summary><p>We do not have verified details for this yet. Contact us below and we will help.</p></details>
+<details><summary>Where is my order?</summary><p>We do not have verified details for this yet. Contact us below and we will help.</p></details>
+<details><summary>Where do I find my report?</summary><p>We do not have verified details for this yet. Contact us below and we will help.</p></details>
+<details><summary>I have a billing or refund question</summary><p>Contact us below.</p></details>
+</section>
+<section class="prod" id="faq-synaps"><h2>Synaps</h2>
+<details><summary>What is Synaps?</summary><p>Synaps is a pharmacist portal. It is a separate business from Aliquot.</p></details>
+<details><summary>I cannot log in</summary><p>We do not have verified details for this yet. Contact us below and we will help.</p></details>
+<details><summary>Where is my order?</summary><p>We do not have verified details for this yet. Contact us below and we will help.</p></details>
+<details><summary>Where do I find my report?</summary><p>We do not have verified details for this yet. Contact us below and we will help.</p></details>
+<details><summary>I have a billing or refund question</summary><p>Contact us below.</p></details>
+</section>
+<section class="prod" id="faq-bloodwork"><h2>Bloodwork Studio / Optimal DX</h2>
+<details><summary>What is Bloodwork Studio?</summary><p>Bloodwork Studio / Optimal DX includes a patient app.</p></details>
+<details><summary>I cannot log in</summary><p>We do not have verified details for this yet. Contact us below and we will help.</p></details>
+<details><summary>Where is my order?</summary><p>We do not have verified details for this yet. Contact us below and we will help.</p></details>
+<details><summary>Where do I find my report?</summary><p>We do not have verified details for this yet. Contact us below and we will help.</p></details>
+<details><summary>I have a billing or refund question</summary><p>Contact us below.</p></details>
+</section>
+<section class="prod" id="faq-peptidedoctor"><h2>Peptide Doctor</h2>
+<details><summary>I cannot log in</summary><p>We do not have verified details for this yet. Contact us below and we will help.</p></details>
+<details><summary>Where is my order?</summary><p>We do not have verified details for this yet. Contact us below and we will help.</p></details>
+<details><summary>Where do I find my report?</summary><p>We do not have verified details for this yet. Contact us below and we will help.</p></details>
+<details><summary>I have a billing or refund question</summary><p>Contact us below.</p></details>
+</section>
+<p id="none">No FAQs match your search. Contact us below.</p>
+</div>
+<h2 id="contact">Contact us</h2>
+<form id="cform">
+<label for="site">Which site</label>
+<select id="site" required><option value="">Select a site</option><option value="aliquot">Aliquot</option><option value="precisely">Precisely Skin</option><option value="synaps">Synaps</option><option value="bloodwork">Bloodwork Studio / Optimal DX</option><option value="peptidedoctor">Peptide Doctor</option></select>
+<label for="role">Your role</label>
+<select id="role" required><option value="">Select your role</option><option>patient</option><option>practitioner</option><option>pharmacist</option><option>admin</option><option>other</option></select>
+<label for="type">Issue type</label>
+<select id="type" required><option value="">Select an issue type</option><option>login</option><option>orders</option><option>billing</option><option>reports</option><option>medical</option><option>other</option></select>
+<label for="msg">Message</label>
+<textarea id="msg" rows="6" maxlength="2000" required></textarea>
+<div class="warn">Please do not include passwords, PINs or health details.</div>
+<label for="email">Contact email</label>
+<input id="email" type="email" required>
+<button type="submit">Send by email</button>
+<p class="note">This opens your email app with a draft to our help inbox. A proper online form is planned as a later step.</p>
+</form>
+</main>
+<footer>
+<p>Response time: [placeholder, to be confirmed].</p>
+</footer>
+<script>
+(function(){
+var names={"aliquot":"Aliquot","precisely":"Precisely Skin","synaps":"Synaps","bloodwork":"Bloodwork Studio / Optimal DX","peptidedoctor":"Peptide Doctor"};
+var site=document.getElementById("site");
+var p=new URLSearchParams(location.search).get("site");
+if(p){p=p.toLowerCase();if(names[p])site.value=p;}
+var s=document.getElementById("search");
+s.addEventListener("input",function(){
+ var q=s.value.trim().toLowerCase(),any=false;
+ document.querySelectorAll(".prod").forEach(function(sec){
+  var title=sec.querySelector("h2").textContent.toLowerCase(),vis=0;
+  sec.querySelectorAll("details").forEach(function(d){
+   var m=!q||title.indexOf(q)>-1||d.textContent.toLowerCase().indexOf(q)>-1;
+   d.style.display=m?"":"none";if(m)vis++;
+   if(q&&m)d.open=true;else if(!q)d.open=false;
+  });
+  sec.style.display=vis?"":"none";if(vis)any=true;
+ });
+ document.getElementById("none").style.display=any?"none":"block";
+});
+document.querySelectorAll(".tile").forEach(function(t){
+ t.addEventListener("click",function(){site.value=t.getAttribute("data-site");});
+});
+document.getElementById("cform").addEventListener("submit",function(e){
+ e.preventDefault();
+ var msg=document.getElementById("msg").value.trim();
+ var ex=msg.replace(/\s+/g," ").slice(0,50);
+ var subj="["+names[site.value].toUpperCase()+"] ["+document.getElementById("type").value+"] "+ex;
+ var body="Site: "+names[site.value]+"\nRole: "+document.getElementById("role").value+"\nIssue type: "+document.getElementById("type").value+"\nContact email: "+document.getElementById("email").value+"\n\n"+msg;
+ location.href="mailto:help.desk.au@gmail.com?subject="+encodeURIComponent(subj)+"&body="+encodeURIComponent(body);
+});
+})();
+</script>
+</body>
+</html>
