@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Help Desk</title>
+<title>Arke Online Support</title>
 <style>
 :root{--bg:#f6f8fa;--card:#fff;--ink:#1d2733;--mute:#5b6775;--accent:#1f6f8b;--line:#dde3ea}
 *{box-sizing:border-box}
@@ -29,13 +29,19 @@ select,input,textarea{width:100%;padding:.65rem;border:1px solid var(--line);bor
 .warn{background:#fff4e0;border:1px solid #f0c36d;border-radius:6px;padding:.6rem;font-size:.9rem;margin-top:.4rem}
 button{margin-top:1rem;background:var(--accent);color:#fff;border:0;padding:.8rem 1.4rem;border-radius:6px;font-size:1rem;cursor:pointer}
 .note{color:var(--mute);font-size:.85rem}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.ok{background:#e6f6ec;border:1px solid #8bcf9f;border-radius:10px;padding:1rem}
+.ok strong{font-size:1.3rem}
+.err{color:#a02020;font-size:.9rem;margin-top:.5rem}
+button[disabled]{opacity:.6;cursor:wait}
 #none{display:none;color:var(--mute)}
 footer{text-align:center;color:var(--mute);padding:2rem 1rem;font-size:.9rem}
 </style>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
 <header>
-<h1>Help Desk</h1>
+<h1>Arke Online Support</h1>
 <p>Find answers or get in touch.</p>
 <input id="search" type="search" placeholder="Search FAQs" aria-label="Search FAQs">
 </header>
@@ -44,26 +50,18 @@ footer{text-align:center;color:var(--mute);padding:2rem 1rem;font-size:.9rem}
 <div class="tiles">
 <a class="tile" href="#faq-aliquot" data-site="aliquot"><h3>Aliquot</h3><span>View FAQs</span></a>
 <a class="tile" href="#faq-precisely" data-site="precisely"><h3>Precisely Skin</h3><span>View FAQs</span></a>
-<a class="tile" href="#faq-synaps" data-site="synaps"><h3>Synaps</h3><span>View FAQs</span></a>
 <a class="tile" href="#faq-bloodwork" data-site="bloodwork"><h3>Bloodwork Studio / Optimal DX</h3><span>View FAQs</span></a>
 <a class="tile" href="#faq-peptidedoctor" data-site="peptidedoctor"><h3>Peptide Doctor</h3><span>View FAQs</span></a>
 </div>
 <div id="faqs">
 <section class="prod" id="faq-aliquot"><h2>Aliquot</h2>
-<details><summary>What is Aliquot?</summary><p>Aliquot is a separate business from Synaps.</p></details>
+<details><summary>What is Aliquot?</summary><p>Aliquot is its own separate business.</p></details>
 <details><summary>I cannot log in</summary><p>We do not have verified details for this yet. Contact us below and we will help.</p></details>
 <details><summary>Where is my order?</summary><p>We do not have verified details for this yet. Contact us below and we will help.</p></details>
 <details><summary>Where do I find my report?</summary><p>We do not have verified details for this yet. Contact us below and we will help.</p></details>
 <details><summary>I have a billing or refund question</summary><p>Contact us below.</p></details>
 </section>
 <section class="prod" id="faq-precisely"><h2>Precisely Skin</h2>
-<details><summary>I cannot log in</summary><p>We do not have verified details for this yet. Contact us below and we will help.</p></details>
-<details><summary>Where is my order?</summary><p>We do not have verified details for this yet. Contact us below and we will help.</p></details>
-<details><summary>Where do I find my report?</summary><p>We do not have verified details for this yet. Contact us below and we will help.</p></details>
-<details><summary>I have a billing or refund question</summary><p>Contact us below.</p></details>
-</section>
-<section class="prod" id="faq-synaps"><h2>Synaps</h2>
-<details><summary>What is Synaps?</summary><p>Synaps is a pharmacist portal. It is a separate business from Aliquot.</p></details>
 <details><summary>I cannot log in</summary><p>We do not have verified details for this yet. Contact us below and we will help.</p></details>
 <details><summary>Where is my order?</summary><p>We do not have verified details for this yet. Contact us below and we will help.</p></details>
 <details><summary>Where do I find my report?</summary><p>We do not have verified details for this yet. Contact us below and we will help.</p></details>
@@ -85,28 +83,36 @@ footer{text-align:center;color:var(--mute);padding:2rem 1rem;font-size:.9rem}
 <p id="none">No FAQs match your search. Contact us below.</p>
 </div>
 <h2 id="contact">Contact us</h2>
-<form id="cform">
+<div id="success" class="ok" hidden role="status"><strong>Thank you. Your ticket number is <span id="tnum"></span>.</strong><p>We have emailed you a confirmation. Please keep the number if you contact us again.</p><p class="note">Reminder: do not send passwords, PINs or health details by email or in a follow-up.</p><p id="hw" hidden class="warn">Your message may include health details. We only ask for technical information. Please do not send health details in future messages.</p></div>
+<form id="cform" novalidate>
 <label for="site">Which site</label>
-<select id="site" required><option value="">Select a site</option><option value="aliquot">Aliquot</option><option value="precisely">Precisely Skin</option><option value="synaps">Synaps</option><option value="bloodwork">Bloodwork Studio / Optimal DX</option><option value="peptidedoctor">Peptide Doctor</option></select>
+<select id="site" name="site" required><option value="">Select a site</option><option value="aliquot">Aliquot</option><option value="precisely">Precisely Skin</option><option value="bloodwork">Bloodwork Studio / Optimal DX</option><option value="peptidedoctor">Peptide Doctor</option></select>
 <label for="role">Your role</label>
-<select id="role" required><option value="">Select your role</option><option>patient</option><option>practitioner</option><option>pharmacist</option><option>admin</option><option>other</option></select>
+<select id="role" name="role" required><option value="">Select your role</option><option>patient</option><option>practitioner</option><option>pharmacist</option><option>admin</option><option>other</option></select>
 <label for="type">Issue type</label>
-<select id="type" required><option value="">Select an issue type</option><option>login</option><option>orders</option><option>billing</option><option>reports</option><option>medical</option><option>other</option></select>
+<select id="type" name="type" required><option value="">Select an issue type</option><option>login</option><option>orders</option><option>billing</option><option>reports</option><option>medical</option><option>other</option></select>
 <label for="msg">Message</label>
-<textarea id="msg" rows="6" maxlength="2000" required></textarea>
-<div class="warn">Please do not include passwords, PINs or health details.</div>
+<textarea id="msg" name="message" rows="6" minlength="10" maxlength="2000" required></textarea>
+<div class="warn"><strong>Do not include passwords, PINs or health details.</strong> We will never ask for them. Personal details such as email addresses, phone numbers and ID numbers typed into the message are automatically removed.</div>
 <label for="email">Contact email</label>
-<input id="email" type="email" required>
-<button type="submit">Send by email</button>
-<p class="note">This opens your email app with a draft to our help inbox. A proper online form is planned as a later step.</p>
+<input id="email" name="email" type="email" autocomplete="email" required>
+<label for="phone">Phone (optional)</label>
+<input id="phone" name="phone" type="tel" autocomplete="tel">
+<div class="hp" aria-hidden="true"><label for="website">Leave this field empty</label><input id="website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
+<div class="cf-turnstile" data-sitekey="0x4AAAAAAFZpcIJ9aiQbkdvD" style="margin-top:1rem"></div>
+<button type="submit" id="send">Send request</button>
+<p class="err" id="err" role="alert" hidden></p>
+<p class="note">Your request creates a ticket and we email you a confirmation with its number.</p>
 </form>
 </main>
 <footer>
 <p>Response time: [placeholder, to be confirmed].</p>
 </footer>
 <script>
+// Placeholder: replace with https://otzizwvltiiaaimjnwzd.supabase.co/functions/v1 at go-live, after Raf approves.
+var API_BASE_URL="https://otzizwvltiiaaimjnwzd.supabase.co/functions/v1";
 (function(){
-var names={"aliquot":"Aliquot","precisely":"Precisely Skin","synaps":"Synaps","bloodwork":"Bloodwork Studio / Optimal DX","peptidedoctor":"Peptide Doctor"};
+var names={"aliquot":"Aliquot","precisely":"Precisely Skin","bloodwork":"Bloodwork Studio / Optimal DX","peptidedoctor":"Peptide Doctor"};
 var site=document.getElementById("site");
 var p=new URLSearchParams(location.search).get("site");
 if(p){p=p.toLowerCase();if(names[p])site.value=p;}
@@ -127,13 +133,28 @@ s.addEventListener("input",function(){
 document.querySelectorAll(".tile").forEach(function(t){
  t.addEventListener("click",function(){site.value=t.getAttribute("data-site");});
 });
-document.getElementById("cform").addEventListener("submit",function(e){
- e.preventDefault();
- var msg=document.getElementById("msg").value.trim();
- var ex=msg.replace(/\s+/g," ").slice(0,50);
- var subj="["+names[site.value].toUpperCase()+"] ["+document.getElementById("type").value+"] "+ex;
- var body="Site: "+names[site.value]+"\nRole: "+document.getElementById("role").value+"\nIssue type: "+document.getElementById("type").value+"\nContact email: "+document.getElementById("email").value+"\n\n"+msg;
- location.href="mailto:help.desk.au@gmail.com?subject="+encodeURIComponent(subj)+"&body="+encodeURIComponent(body);
+var form=document.getElementById("cform"),err=document.getElementById("err"),btn=document.getElementById("send");
+var MSGS={validation:"Please check the form fields and try again.",turnstile:"The spam check failed. Please try again.",rate_limited:"Too many requests. Please try again later.",server:"Something went wrong on our side. Please try again shortly."};
+form.addEventListener("submit",function(e){
+ e.preventDefault();err.hidden=true;
+ if(!form.checkValidity()){form.reportValidity();return;}
+ var tok=form.querySelector('[name="cf-turnstile-response"]');
+ var payload={site:site.value,role:document.getElementById("role").value,type:document.getElementById("type").value,
+  message:document.getElementById("msg").value.trim(),email:document.getElementById("email").value.trim(),
+  phone:document.getElementById("phone").value.trim(),website:document.getElementById("website").value,
+  page_path:location.pathname,turnstile_token:tok?tok.value:""};
+ btn.disabled=true;
+ fetch(API_BASE_URL+"/submit-ticket",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(payload)})
+ .then(function(r){return r.json().then(function(j){return{s:r.status,j:j};});})
+ .then(function(o){
+  if(o.s===200&&o.j.number){
+   document.getElementById("tnum").textContent=o.j.number;
+   document.getElementById("hw").hidden=!o.j.health_warning;
+   form.hidden=true;var ok=document.getElementById("success");ok.hidden=false;ok.scrollIntoView({behavior:"smooth"});
+  }else{err.textContent=MSGS[o.j&&o.j.error]||MSGS.server;err.hidden=false;if(window.turnstile)turnstile.reset();}
+ })
+ .catch(function(){err.textContent=MSGS.server;err.hidden=false;})
+ .then(function(){btn.disabled=false;});
 });
 })();
 </script>
