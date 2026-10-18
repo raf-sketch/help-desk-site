@@ -94,6 +94,8 @@ footer{text-align:center;color:var(--mute);padding:2rem 1rem;font-size:.9rem}
 <label for="msg">Message</label>
 <textarea id="msg" name="message" rows="6" minlength="10" maxlength="2000" required></textarea>
 <div class="warn"><strong>Do not include passwords, PINs or health details.</strong> We will never ask for them. Personal details such as email addresses, phone numbers and ID numbers typed into the message are automatically removed.</div>
+<label for="name">Your name (optional, recommended)</label>
+<input id="name" name="name" type="text" maxlength="80" autocomplete="name">
 <label for="email">Contact email</label>
 <input id="email" name="email" type="email" autocomplete="email" required>
 <label for="phone">Phone (optional)</label>
@@ -106,7 +108,7 @@ footer{text-align:center;color:var(--mute);padding:2rem 1rem;font-size:.9rem}
 </form>
 </main>
 <footer>
-<p>Response time: [placeholder, to be confirmed].</p>
+<p>We reply within one business day (Brisbane time).</p>
 </footer>
 <script>
 // Placeholder: replace with https://otzizwvltiiaaimjnwzd.supabase.co/functions/v1 at go-live, after Raf approves.
@@ -140,7 +142,7 @@ form.addEventListener("submit",function(e){
  if(!form.checkValidity()){form.reportValidity();return;}
  var tok=form.querySelector('[name="cf-turnstile-response"]');
  var payload={site:site.value,role:document.getElementById("role").value,type:document.getElementById("type").value,
-  message:document.getElementById("msg").value.trim(),email:document.getElementById("email").value.trim(),
+  message:document.getElementById("msg").value.trim(),email:document.getElementById("email").value.trim(),name:document.getElementById("name").value.trim(),
   phone:document.getElementById("phone").value.trim(),website:document.getElementById("website").value,
   page_path:location.pathname,turnstile_token:tok?tok.value:""};
  btn.disabled=true;
