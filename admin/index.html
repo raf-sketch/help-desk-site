@@ -6,112 +6,234 @@
 <meta name="robots" content="noindex,nofollow">
 <title>Help Desk Staff Dashboard</title>
 <style>
-:root{--bg:#f6f8fa;--card:#fff;--ink:#1d2733;--mute:#5b6775;--accent:#1f6f8b;--line:#dde3ea}
+:root{--bg:#f3f7f8;--card:#fff;--ink:#14262e;--mute:#4c606a;--accent:#0f6a7e;--accent-d:#0b5263;--accent-l:#e3f1f4;--line:#d3dfe3;--side:#12303a;--warn-bg:#fff3d9;--warn-line:#e9c36b;--warn-ink:#6a4300;--bad:#a12626;--bad-bg:#fdeeee;--ok:#14633a;--ok-bg:#e8f6ee;--r:12px;--sw:232px}
 *{box-sizing:border-box}
-body{margin:0;font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--ink);background:var(--bg)}
-header{background:var(--accent);color:#fff;padding:1.2rem 1rem;text-align:center}
-header h1{margin:0 0 .25rem;font-size:1.6rem}
-header p{margin:0;opacity:.9}
-#who{margin-top:.5rem;font-size:.9rem}
-#who button{margin:0 0 0 .5rem;padding:.25rem .7rem;background:#fff;color:var(--accent);font-size:.85rem}
-main{max-width:1000px;margin:0 auto;padding:1rem}
-h2{margin:1.5rem 0 .75rem}
-.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.75rem}
-.tile{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:.8rem 1rem}
-.tile b{display:block;font-size:1.5rem;color:var(--accent)}
-.tile span{color:var(--mute);font-size:.85rem}
-.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:1rem;margin:1rem 0}
-label{display:block;font-weight:600;margin:.8rem 0 .25rem}
-select,input,textarea{width:100%;padding:.65rem;border:1px solid var(--line);border-radius:6px;font:inherit}
-.filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.75rem}
-.filters label{margin:0 0 .25rem}
-.warn{background:#fff4e0;border:1px solid #f0c36d;border-radius:6px;padding:.6rem;font-size:.9rem;margin:.6rem 0}
-.err{background:#fdecec;border:1px solid #e3a3a3;border-radius:6px;padding:.6rem;font-size:.9rem;margin:.6rem 0}
-button{margin-top:1rem;background:var(--accent);color:#fff;border:0;padding:.7rem 1.2rem;border-radius:6px;font-size:1rem;cursor:pointer}
-button.sec{background:#fff;color:var(--accent);border:1px solid var(--accent)}
-button:disabled{opacity:.5;cursor:default}
-table{width:100%;border-collapse:collapse;font-size:.92rem}
-th,td{text-align:left;padding:.5rem;border-bottom:1px solid var(--line);vertical-align:top}
-tr.row{cursor:pointer}
-tr.row:hover,tr.row:focus{background:#eef5f8}
-.pill{display:inline-block;padding:.05rem .5rem;border-radius:99px;background:#e6eef2;font-size:.8rem}
-.pill.h{background:#fff4e0;border:1px solid #f0c36d}
+body{margin:0;font:.95rem/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg)}
+:focus-visible{outline:3px solid #f5a524;outline-offset:2px}
+.hide,[hidden]{display:none!important}
+button{font:inherit;cursor:pointer}
+.btn{background:var(--accent);color:#fff;border:1px solid var(--accent);padding:.55rem 1.1rem;border-radius:8px;font-weight:600;min-height:40px}
+.btn:hover{background:var(--accent-d)}
+.btn.sec{background:#fff;color:var(--accent)}
+.btn.sec:hover{background:var(--accent-l)}
+.btn.danger{background:#fff;color:var(--bad);border-color:#d99}
+.btn:disabled{opacity:.5;cursor:default}
+label{display:block;font-weight:600;font-size:.88rem;margin:0 0 .25rem}
+select,input,textarea{width:100%;padding:.55rem .7rem;border:1px solid #8aa0a9;border-radius:8px;font:inherit;color:var(--ink);background:#fff;min-height:40px}
+select:focus,input:focus,textarea:focus{border-color:var(--accent)}
 .note{color:var(--mute);font-size:.85rem}
-pre{white-space:pre-wrap;word-wrap:break-word;font:inherit;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:.7rem;margin:.4rem 0}
-.hide{display:none}
-.center{text-align:center;padding:3rem 1rem}
-.tablewrap{overflow-x:auto}
-footer{text-align:center;color:var(--mute);padding:2rem 1rem;font-size:.9rem}
+.center{text-align:center;padding:4rem 1rem}
+.spin{width:2rem;height:2rem;border:3px solid var(--line);border-top-color:var(--accent);border-radius:50%;margin:0 auto 1rem;animation:sp .8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.spin{animation-duration:3s}}
+.gate{max-width:420px;margin:12vh auto;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:2rem;text-align:center;box-shadow:0 4px 18px rgba(20,38,46,.08)}
+.gate h1{font-size:1.4rem;margin:.3rem 0}
+/* layout */
+.shell{display:grid;grid-template-columns:var(--sw) 1fr;min-height:100vh}
+aside{background:var(--side);color:#e8f2f4;padding:1rem .75rem;display:flex;flex-direction:column;gap:.25rem;position:sticky;top:0;height:100vh}
+.brand{font-weight:700;padding:.4rem .6rem 1rem;display:flex;gap:.5rem;align-items:center;font-size:1rem}
+.dot{width:.85rem;height:.85rem;border-radius:50%;background:#6cc3d5;box-shadow:0 0 0 4px rgba(108,195,213,.25)}
+nav{display:flex;flex-direction:column;gap:.2rem}
+nav button{background:none;border:0;color:#cfe3e8;text-align:left;padding:.65rem .8rem;border-radius:8px;display:flex;justify-content:space-between;align-items:center;min-height:44px}
+nav button:hover{background:rgba(255,255,255,.08)}
+nav button[aria-current=page]{background:#fff;color:var(--side);font-weight:700}
+nav .c{font-size:.75rem;background:rgba(255,255,255,.15);padding:.05rem .5rem;border-radius:99px}
+nav button[aria-current=page] .c{background:var(--accent-l);color:var(--accent-d)}
+.me{margin-top:auto;padding:.7rem;border-top:1px solid rgba(255,255,255,.15);font-size:.82rem;overflow-wrap:anywhere}
+.me .btn{margin-top:.5rem;width:100%;background:transparent;color:#fff;border-color:rgba(255,255,255,.5)}
+.me .btn:hover{background:rgba(255,255,255,.1)}
+.mtop{display:none}
+main{padding:1.5rem;max-width:1200px;width:100%}
+h1.pt{font-size:1.5rem;margin:0 0 .2rem;letter-spacing:-.01em}
+.sub{color:var(--mute);margin:0 0 1.2rem}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.75rem;margin-bottom:1.25rem}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:.85rem 1rem;text-align:left;border-left-width:4px;color:inherit}
+button.stat{width:100%}
+button.stat:hover{border-color:var(--accent)}
+.stat b{display:block;font-size:1.7rem;line-height:1.1}
+.stat span{color:var(--mute);font-size:.82rem}
+.stat.s-new{border-left-color:#2a6fdb}.stat.s-open{border-left-color:#0f8a6a}.stat.s-waiting{border-left-color:#c98a00}.stat.s-resolved{border-left-color:#6a7f89}.stat.s-closed{border-left-color:#aab8bd}.stat.s-health{border-left-color:#c98a00;background:var(--warn-bg)}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--r)}
+.bar{display:grid;grid-template-columns:2fr repeat(3,1fr) auto;gap:.75rem;padding:1rem;align-items:end;border-bottom:1px solid var(--line)}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+th,td{text-align:left;padding:.65rem .9rem;border-bottom:1px solid var(--line);vertical-align:middle}
+th{font-size:.78rem;text-transform:uppercase;letter-spacing:.04em;color:var(--mute);background:#f8fbfc;white-space:nowrap}
+th button{all:unset;cursor:pointer;display:inline-flex;gap:.3rem;align-items:center;padding:.2rem 0}
+th button:focus-visible{outline:3px solid #f5a524}
+th .ar{opacity:.35}
+th[aria-sort=ascending] .ar,th[aria-sort=descending] .ar{opacity:1;color:var(--accent)}
+tbody tr:last-child td{border-bottom:0}
+tr.row{cursor:pointer}
+tr.row:hover,tr.row:focus-visible{background:var(--accent-l);outline:0}
+td.num{font-weight:700;font-family:ui-monospace,Menlo,monospace;white-space:nowrap}
+td.sub2{max-width:340px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.badge{display:inline-flex;align-items:center;gap:.25rem;padding:.1rem .6rem;border-radius:99px;font-size:.78rem;font-weight:600;text-transform:capitalize;border:1px solid transparent}
+.b-new{background:#e3edfd;color:#1b4fa8}.b-open{background:#dff3ec;color:#0b6a50}.b-waiting{background:#fdf0cf;color:#7a5400}.b-resolved{background:#e6ecee;color:#3d5159}.b-closed{background:#f0f3f4;color:#5a6b72}
+.b-health{background:var(--warn-bg);color:var(--warn-ink);border-color:var(--warn-line);margin-left:.3rem}
+.b-owner{background:#ece6fb;color:#4b2a9a}.b-agent{background:#dff3ec;color:#0b6a50}.b-viewer{background:#e6ecee;color:#3d5159}
+.empty{text-align:center;padding:3rem 1rem;color:var(--mute)}
+.empty b{display:block;color:var(--ink);font-size:1.05rem;margin-bottom:.2rem}
+.skel td div{height:.9rem;background:linear-gradient(90deg,#eef3f5,#f8fbfc,#eef3f5);background-size:200% 100%;border-radius:4px;animation:sh 1.2s infinite}
+@keyframes sh{to{background-position:-200% 0}}
+.err{background:var(--bad-bg);border:1px solid #e3a3a3;color:var(--bad);border-radius:8px;padding:.7rem .9rem;margin:0 0 1rem}
+.foot{padding:.7rem 1rem;color:var(--mute);font-size:.82rem;display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.sites{margin-bottom:1.25rem}
+.sites summary{cursor:pointer;font-weight:600;padding:.8rem 1rem;min-height:44px}
+/* slide-over */
+.scrim{position:fixed;inset:0;background:rgba(10,25,31,.45);z-index:90}
+.slide{position:fixed;top:0;right:0;bottom:0;width:min(560px,100%);background:var(--card);z-index:100;box-shadow:-12px 0 36px rgba(10,25,31,.25);display:flex;flex-direction:column;transform:translateX(0);transition:transform .2s}
+.slide.off{transform:translateX(100%);visibility:hidden}
+@media(prefers-reduced-motion:reduce){.slide{transition:none}}
+.slide header{padding:1rem 1.25rem;border-bottom:1px solid var(--line);display:flex;gap:1rem;justify-content:space-between;align-items:flex-start}
+.slide h2{margin:0;font-size:1.2rem}
+.slide .x{background:none;border:0;font-size:1.8rem;line-height:1;min-width:44px;min-height:44px;margin:-.5rem -.6rem 0 0;color:var(--mute)}
+.slide .bd{padding:1.25rem;overflow-y:auto;flex:1}
+.warnbox{background:var(--warn-bg);border:1px solid var(--warn-line);color:var(--warn-ink);border-radius:8px;padding:.7rem .9rem;margin:0 0 1rem}
+.kv{display:grid;grid-template-columns:110px 1fr;gap:.35rem .75rem;margin:0 0 1rem}
+.kv dt{color:var(--mute);font-size:.85rem}.kv dd{margin:0;overflow-wrap:anywhere}
+.msgbox{white-space:pre-wrap;overflow-wrap:anywhere;font:inherit;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:.9rem;margin:.3rem 0 1rem}
+.draft{border:2px solid var(--accent);border-radius:var(--r);padding:1rem;background:#f7fcfd}
+.draft h3{margin:0 0 .6rem;font-size:1rem;display:flex;gap:.5rem;align-items:center;flex-wrap:wrap}
+.tag{font-size:.75rem;background:var(--ok-bg);color:var(--ok);border:1px solid #8bcf9f;border-radius:99px;padding:.1rem .6rem;font-weight:700}
+.draft .row2{display:grid;grid-template-columns:140px 1fr;gap:.75rem;margin-bottom:.75rem}
+.acts{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin-top:.75rem}
+/* staff */
+.add{display:grid;grid-template-columns:2fr 1fr auto;gap:.75rem;align-items:end;padding:1rem;border-top:1px solid var(--line)}
+.roles{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.75rem;margin-bottom:1.25rem}
+.roles div{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:.8rem 1rem}
+.roles p{margin:.4rem 0 0;color:var(--mute);font-size:.85rem}
+.sw{display:inline-flex;align-items:center;gap:.5rem}
+.sw input{width:auto;min-height:0;width:1.15rem;height:1.15rem}
+.toast{position:fixed;left:50%;bottom:1.2rem;transform:translateX(-50%);background:var(--side);color:#fff;padding:.7rem 1.1rem;border-radius:10px;z-index:200;box-shadow:0 6px 20px rgba(0,0,0,.3);max-width:90vw}
+@media(max-width:860px){
+ .shell{grid-template-columns:1fr}
+ aside{position:fixed;left:0;top:0;bottom:0;width:260px;z-index:80;transform:translateX(-100%);visibility:hidden;transition:transform .2s}
+ aside.open{transform:none;visibility:visible}
+ .mtop{display:flex;align-items:center;gap:.75rem;background:var(--side);color:#fff;padding:.5rem .75rem;position:sticky;top:0;z-index:70}
+ .mtop button{background:none;border:1px solid rgba(255,255,255,.4);color:#fff;border-radius:8px;min-width:44px;min-height:44px;font-size:1.2rem}
+ main{padding:1rem}
+ .bar{grid-template-columns:1fr 1fr}.bar .q{grid-column:1/-1}.bar .clr{grid-column:1/-1}
+ .add{grid-template-columns:1fr}
+ .kv{grid-template-columns:90px 1fr}
+ .draft .row2{grid-template-columns:1fr}
+ /* tickets as cards */
+ table.tk thead{display:none}
+ table.tk,table.tk tbody,table.tk tr,table.tk td{display:block;width:100%}
+ table.tk tr.row{padding:.7rem .9rem;border-bottom:1px solid var(--line)}
+ table.tk td{border:0;padding:.1rem 0}
+ td.sub2{max-width:none;white-space:normal}
+ td[data-l]::before{content:attr(data-l) ": ";color:var(--mute);font-size:.8rem}
+}
 </style>
 </head>
 <body>
-<header>
-<h1>Help Desk Staff</h1>
-<p>Arke Online Support</p>
-<div id="who" class="hide"><span id="whotxt"></span><button id="signout" type="button">Sign out</button></div>
-</header>
-<main>
-<div id="loading" class="center">Loading...</div>
+<div id="loading" class="center"><div class="spin" aria-hidden="true"></div><p role="status">Loading...</p></div>
 
-<div id="login" class="center hide">
-<p>Staff sign in is by approved Google account only.</p>
-<button id="gbtn" type="button">Sign in with Google</button>
+<div id="login" class="gate hide">
+<h1>Help Desk Staff</h1>
+<p class="note" style="margin:0 0 1.2rem">Arke Online Support. Staff sign in is by approved Google account only.</p>
+<button id="gbtn" type="button" class="btn" style="width:100%">Sign in with Google</button>
 </div>
 
-<div id="denied" class="center hide"><p><b>Not authorised.</b></p><p>This Google account is not an approved staff member. You have been signed out.</p></div>
+<div id="denied" class="gate hide" role="alert"><h1>Not authorised</h1><p>This Google account is not an approved staff member. You have been signed out.</p></div>
 
 <div id="app" class="hide">
-<div id="apperr" class="err hide"></div>
-<h2>Overview</h2>
-<div class="tiles" id="totals"></div>
-<div class="tablewrap card"><table><thead><tr><th>Site</th><th>Total</th><th>New</th><th>Open</th><th>Waiting</th><th>Resolved</th><th>Closed</th><th>Health flagged</th></tr></thead><tbody id="ovrows"></tbody></table></div>
+<div class="mtop"><button type="button" id="menu" aria-label="Open menu" aria-expanded="false" aria-controls="side">&#9776;</button><strong>Help Desk Staff</strong></div>
+<div class="shell">
+<aside id="side">
+<div class="brand"><span class="dot" aria-hidden="true"></span>Arke Help Desk</div>
+<nav aria-label="Main">
+<button type="button" data-view="tickets" aria-current="page">Tickets <span class="c" id="n-tickets">0</span></button>
+<button type="button" data-view="chats">Chats <span class="c" id="n-chats">0</span></button>
+<button type="button" data-view="staff" id="nav-staff" class="hide">Staff</button>
+</nav>
+<div class="me"><div id="whotxt"></div><span class="note" style="color:#a9c4cb">Times in Brisbane time</span><button id="signout" type="button" class="btn">Sign out</button></div>
+</aside>
+<main>
+<div id="apperr" class="err hide" role="alert"></div>
 
-<h2>Tickets</h2>
-<div class="card">
-<div class="filters">
+<section id="v-tickets">
+<h1 class="pt" id="vtitle">Tickets</h1>
+<p class="sub" id="vsub">All requests from the contact form.</p>
+<div class="cards" id="totals" aria-label="Overview"></div>
+<details class="panel sites"><summary>Breakdown by site</summary>
+<div class="tw"><table><thead><tr><th>Site</th><th>Total</th><th>New</th><th>Open</th><th>Waiting</th><th>Resolved</th><th>Closed</th><th>Health flagged</th></tr></thead><tbody id="ovrows"></tbody></table></div></details>
+<div class="panel">
+<div class="bar">
+<div class="q"><label for="fq">Search</label><input id="fq" type="search" placeholder="Ticket number, email or subject" autocomplete="off"></div>
 <div><label for="fsite">Site</label><select id="fsite"><option value="">All sites</option></select></div>
 <div><label for="ftype">Type</label><select id="ftype"><option value="">All types</option><option>login</option><option>orders</option><option>billing</option><option>reports</option><option>medical</option><option>other</option></select></div>
 <div><label for="fstatus">Status</label><select id="fstatus"><option value="">All statuses</option><option>new</option><option>open</option><option>waiting</option><option>resolved</option><option>closed</option></select></div>
+<button type="button" class="btn sec clr" id="fclear">Clear</button>
 </div>
+<div class="tw"><table class="tk"><thead><tr>
+<th scope="col" data-k="number" aria-sort="none"><button type="button">Number <span class="ar" aria-hidden="true">&#8693;</span></button></th>
+<th scope="col" data-k="site_name" aria-sort="none"><button type="button">Site <span class="ar" aria-hidden="true">&#8693;</span></button></th>
+<th scope="col" data-k="type" aria-sort="none"><button type="button">Type <span class="ar" aria-hidden="true">&#8693;</span></button></th>
+<th scope="col" data-k="status" aria-sort="none"><button type="button">Status <span class="ar" aria-hidden="true">&#8693;</span></button></th>
+<th scope="col" data-k="subject" aria-sort="none"><button type="button">Subject <span class="ar" aria-hidden="true">&#8693;</span></button></th>
+<th scope="col" data-k="updated_at" aria-sort="descending"><button type="button">Updated <span class="ar" aria-hidden="true">&#8595;</span></button></th>
+</tr></thead><tbody id="rows"></tbody></table></div>
+<div id="empty" class="empty hide"><b id="empty-t">No tickets match</b><span id="empty-s">Try clearing the filters or searching for something else.</span></div>
+<div class="foot"><span id="count"></span><span id="limitnote"></span></div>
 </div>
-<div class="tablewrap card"><table><thead><tr><th>Number</th><th>Site</th><th>Type</th><th>Status</th><th>Subject</th><th>Updated (Brisbane)</th></tr></thead><tbody id="rows"></tbody></table>
-<p id="norows" class="note hide">No tickets match.</p><p class="note" id="limitnote"></p></div>
+</section>
 
-<div id="detail" class="card hide">
-<h2 style="margin-top:0" id="dtitle"></h2>
-<div id="dhealth" class="warn hide"><b>Health flag:</b> this ticket may contain health information. Take care when replying, and do not repeat health details. This is a warning only.</div>
-<p class="note" id="dmeta"></p>
-<p><b>Requester:</b> <span id="dreq"></span></p>
-<p><b>Subject:</b> <span id="dsub"></span></p>
-<pre id="dbody"></pre>
-<p class="note" id="dflags"></p>
-<div id="draftbox">
-<h3>Reply draft</h3>
-<label for="dchan">Channel</label>
-<select id="dchan"><option value="email">email</option><option value="chat">chat</option></select>
-<label for="dtext">Draft</label>
-<textarea id="dtext" rows="7" maxlength="8000"></textarea>
-<div class="warn">Drafts are saved for staff only. Nothing is sent to the requester from this page.</div>
-<button id="dsave" type="button">Save draft</button>
-<button id="ddel" type="button" class="sec">Delete draft</button>
-<span id="dmsg" class="note"></span>
+<section id="v-staff" class="hide">
+<h1 class="pt">Staff</h1>
+<p class="sub">Who can sign in to this dashboard. Only owners see this page.</p>
+<div class="roles">
+<div><span class="badge b-owner">Owner</span><p>Full access. Can manage staff, see all details and save reply drafts.</p></div>
+<div><span class="badge b-agent">Agent</span><p>Can see ticket details and save reply drafts.</p></div>
+<div><span class="badge b-viewer">Viewer</span><p>Read only. Some ticket details may be hidden. Cannot save drafts.</p></div>
 </div>
-<button id="dclose" type="button" class="sec">Close detail</button>
+<div class="panel">
+<div class="tw"><table><thead><tr><th>Email</th><th>Role</th><th>Access</th><th>Added (Brisbane)</th><th></th></tr></thead><tbody id="urows"></tbody></table></div>
+<div class="add">
+<div><label for="uemail">Google account email</label><input id="uemail" type="email" autocomplete="off" placeholder="name@example.com"></div>
+<div><label for="urole">Role</label><select id="urole"><option value="agent">Agent</option><option value="viewer">Viewer</option><option value="owner">Owner</option></select></div>
+<button id="uadd" type="button" class="btn">Add staff member</button>
 </div>
-
-<div id="users" class="hide">
-<h2>Staff users</h2>
-<div class="tablewrap card"><table><thead><tr><th>Email</th><th>Role</th><th>Active</th><th>Added (Brisbane)</th><th></th></tr></thead><tbody id="urows"></tbody></table></div>
-<div class="card">
-<h3 style="margin-top:0">Add staff</h3>
-<label for="uemail">Google account email</label><input id="uemail" type="email" autocomplete="off">
-<label for="urole">Role</label><select id="urole"><option>agent</option><option>viewer</option><option>owner</option></select>
-<button id="uadd" type="button">Add staff member</button> <span id="umsg" class="note"></span>
+<div class="foot"><span id="umsg" role="status"></span></div>
 </div>
-</div>
-</div>
+</section>
 </main>
-<footer><p>Staff only. Times shown in Brisbane time (AEST).</p></footer>
+</div>
+</div>
+
+<div class="scrim hide" id="scrim"></div>
+<div class="slide off" id="detail" role="dialog" aria-modal="true" aria-labelledby="dtitle" tabindex="-1">
+<header><div><h2 id="dtitle"></h2><div id="dbadges" style="margin-top:.4rem"></div></div><button type="button" class="x" id="dclose" aria-label="Close ticket">&times;</button></header>
+<div class="bd">
+<div id="dhealth" class="warnbox hide"><b>&#9888; Health flag:</b> this ticket may contain health information. Take care when replying, and do not repeat health details. This is a warning only.</div>
+<dl class="kv">
+<dt>Requester</dt><dd id="dreq"></dd>
+<dt>Subject</dt><dd id="dsub"></dd>
+<dt>Created</dt><dd id="dcre"></dd>
+<dt>Updated</dt><dd id="dupd"></dd>
+<dt id="dresl" class="hide">Resolved</dt><dd id="dres" class="hide"></dd>
+<dt id="dclol" class="hide">Closed</dt><dd id="dclo" class="hide"></dd>
+</dl>
+<label>Message</label>
+<pre class="msgbox" id="dbody"></pre>
+<p class="note" id="dflags"></p>
+<div id="draftbox" class="draft">
+<h3>Reply draft <span class="tag">Draft only, nothing is sent</span></h3>
+<div class="row2"><div><label for="dchan">Channel</label>
+<select id="dchan"><option value="email">email</option><option value="chat">chat</option></select></div>
+<div><label for="dtext">Your draft</label>
+<textarea id="dtext" rows="7" maxlength="8000" placeholder="Write a reply for your own reference. It is saved for staff only."></textarea></div></div>
+<p class="note" style="margin:0">Drafts are saved for staff only. Nothing is sent to the requester from this page.</p>
+<div class="acts">
+<button id="dsave" type="button" class="btn">Save draft</button>
+<button id="ddel" type="button" class="btn danger">Delete draft</button>
+<span id="dmsg" class="note" role="status"></span>
+</div>
+</div>
+</div>
+</div>
+<div id="toast" class="toast hide" role="status"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 (function(){
@@ -120,13 +242,17 @@ var SB_KEY="sb_publishable_fql1Vg_wAQEVObE493RkEg_ItB3ToVi";
 var REDIRECT="https://testdomain2.app/admin/";
 var sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,detectSessionInUrl:true,flowType:"pkce"}});
 var $=function(i){return document.getElementById(i)};
-var me=null,tickets=[],current=null,existingDraft=null,LIMIT=500;
+var me=null,tickets=[],current=null,existingDraft=null,LIMIT=500,view="tickets",sortK="updated_at",sortD=-1,lastFocus=null,tt=null;
 var fmt=new Intl.DateTimeFormat("en-AU",{timeZone:"Australia/Brisbane",day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit",hour12:true});
 function when(v){return v?fmt.format(new Date(v)):"-"}
 function show(id){["loading","login","denied","app"].forEach(function(x){$(x).classList.toggle("hide",x!==id)})}
 function el(tag,text,cls){var e=document.createElement(tag);if(text!=null)e.textContent=text;if(cls)e.className=cls;return e}
 function err(m){var b=$("apperr");b.textContent=m;b.classList.remove("hide")}
+function toast(m){var t=$("toast");t.textContent=m;t.classList.remove("hide");clearTimeout(tt);tt=setTimeout(function(){t.classList.add("hide")},3500)}
 function canWrite(){return me&&(me.role==="owner"||me.role==="agent")}
+function cap(s){return s?s.charAt(0).toUpperCase()+s.slice(1):""}
+function badge(status){return el("span",status,"badge b-"+status)}
+function isChat(t){var c=String(t.channel||t.source||t.origin||"").toLowerCase();return c==="chat"}
 
 $("gbtn").addEventListener("click",function(){
  sb.auth.signInWithOAuth({provider:"google",options:{redirectTo:REDIRECT}});
@@ -141,12 +267,24 @@ async function boot(){
  var q=await sb.from("staff_users").select("id,email,role,active").eq("email",email).eq("active",true).maybeSingle();
  if(q.error||!q.data){show("denied");await sb.auth.signOut();setTimeout(function(){location.replace(REDIRECT)},4000);return}
  me={id:s.user.id,email:email,role:q.data.role};
- $("whotxt").textContent=email+" ("+me.role+")";$("who").classList.remove("hide");
+ $("whotxt").textContent=email+" ("+me.role+")";
  show("app");
- if(me.role==="owner"){$("users").classList.remove("hide");loadUsers()}
+ if(me.role==="owner"){$("nav-staff").classList.remove("hide");loadUsers()}
  if(!canWrite())$("draftbox").classList.add("hide");
  loadOverview();loadTickets();
 }
+
+/* navigation */
+function setView(v){
+ view=v;
+ document.querySelectorAll("nav button").forEach(function(b){if(b.dataset.view===v)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")});
+ $("v-tickets").classList.toggle("hide",v==="staff");
+ $("v-staff").classList.toggle("hide",v!=="staff");
+ if(v!=="staff"){$("vtitle").textContent=v==="chats"?"Chats":"Tickets";$("vsub").textContent=v==="chats"?"Live chat conversations.":"All requests from the contact form.";renderRows()}
+ $("side").classList.remove("open");$("menu").setAttribute("aria-expanded","false");
+}
+document.querySelectorAll("nav button").forEach(function(b){b.addEventListener("click",function(){setView(b.dataset.view)})});
+$("menu").addEventListener("click",function(){var o=$("side").classList.toggle("open");this.setAttribute("aria-expanded",String(o))});
 
 async function loadOverview(){
  var r=await sb.rpc("staff_overview");
@@ -162,59 +300,102 @@ async function loadOverview(){
   if(!have[x.site_code]){var o=el("option",x.site_name);o.value=x.site_code;sel.appendChild(o)}
  });
  var t=$("totals");t.textContent="";
- [["Total","total"],["New","new_count"],["Open","open_count"],["Waiting","waiting_count"],["Resolved","resolved_count"],["Closed","closed_count"],["Health flagged","health_flagged"]].forEach(function(p){
-  var d=el("div",null,"tile");d.appendChild(el("b",String(sum[p[1]])));d.appendChild(el("span",p[0]));t.appendChild(d)});
+ [["Total","total","","",""],["New","new_count","s-new","","new"],["Open","open_count","s-open","","open"],["Waiting","waiting_count","s-waiting","","waiting"],["Resolved","resolved_count","s-resolved","","resolved"],["Closed","closed_count","s-closed","","closed"],["Health flagged","health_flagged","s-health","",""]].forEach(function(p){
+  var d=el(p[4]?"button":"div",null,"stat "+p[2]);if(p[4]){d.type="button";d.setAttribute("aria-label","Filter by status "+p[4]);d.addEventListener("click",function(){$("fstatus").value=p[4];loadTickets()})}
+  d.appendChild(el("b",String(sum[p[1]])));d.appendChild(el("span",p[0]));t.appendChild(d)});
 }
 
+function skeleton(){var b=$("rows");b.textContent="";for(var i=0;i<6;i++){var tr=el("tr",null,"skel");for(var j=0;j<6;j++){var td=el("td");td.appendChild(el("div"));tr.appendChild(td)}b.appendChild(tr)}$("empty").classList.add("hide")}
+
 async function loadTickets(){
+ skeleton();
  var q=sb.from("staff_tickets_v").select("*").order("updated_at",{ascending:false}).limit(LIMIT);
  if($("fsite").value)q=q.eq("site_tag",$("fsite").value);
  if($("ftype").value)q=q.eq("type",$("ftype").value);
  if($("fstatus").value)q=q.eq("status",$("fstatus").value);
  var r=await q;
- if(r.error){err("Could not load tickets.");return}
+ if(r.error){$("rows").textContent="";err("Could not load tickets. Please refresh and try again.");return}
  tickets=r.data||[];
- var b=$("rows");b.textContent="";
- tickets.forEach(function(t){
+ $("n-chats").textContent=String(tickets.filter(isChat).length);
+ $("n-tickets").textContent=String(tickets.filter(function(t){return !isChat(t)}).length);
+ renderRows();
+ $("limitnote").textContent=tickets.length>=LIMIT?"Showing the latest "+LIMIT+". Use filters to narrow.":"";
+}
+function filtered(){
+ var s=$("fq").value.toLowerCase().trim();
+ return tickets.filter(function(t){
+  if(view==="chats"?!isChat(t):isChat(t))return false;
+  if(!s)return true;
+  return [t.number,t.requester_email,t.requester_name,t.subject,t.site_name].join(" ").toLowerCase().indexOf(s)>-1;
+ }).sort(function(a,b){
+  var x=a[sortK],y=b[sortK];if(x==null)x="";if(y==null)y="";
+  return (x<y?-1:x>y?1:0)*sortD;
+ });
+}
+function renderRows(){
+ if(!me)return;
+ var list=filtered(),b=$("rows");b.textContent="";
+ list.forEach(function(t){
   var tr=document.createElement("tr");tr.className="row";tr.tabIndex=0;
-  tr.appendChild(el("td",t.number));
-  tr.appendChild(el("td",t.site_name));
-  tr.appendChild(el("td",t.type));
-  var st=el("td");st.appendChild(el("span",t.status,"pill"));
-  if(t.health_flag){st.appendChild(document.createTextNode(" "));st.appendChild(el("span","health","pill h"))}
+  var n=el("td",t.number,"num");tr.appendChild(n);
+  var c=el("td",t.site_name);c.dataset.l="Site";tr.appendChild(c);
+  c=el("td",t.type);c.dataset.l="Type";tr.appendChild(c);
+  var st=el("td");st.appendChild(badge(t.status));
+  if(t.health_flag)st.appendChild(el("span","\u26A0 Health flag","badge b-health"));
   tr.appendChild(st);
-  tr.appendChild(el("td",t.subject||"(hidden for your role)"));
-  tr.appendChild(el("td",when(t.updated_at)));
+  tr.appendChild(el("td",t.subject||"(hidden for your role)","sub2"));
+  c=el("td",when(t.updated_at));c.dataset.l="Updated";c.className="note";tr.appendChild(c);
   var go=function(){openTicket(t)};
   tr.addEventListener("click",go);
-  tr.addEventListener("keydown",function(e){if(e.key==="Enter")go()});
+  tr.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();go()}});
   b.appendChild(tr);
  });
- $("norows").classList.toggle("hide",tickets.length>0);
- $("limitnote").textContent=tickets.length>=LIMIT?"Showing the latest "+LIMIT+" tickets. Use filters to narrow.":"";
+ var any=list.length>0;
+ $("empty").classList.toggle("hide",any);
+ if(!any){
+  var filt=$("fq").value||$("fsite").value||$("ftype").value||$("fstatus").value;
+  $("empty-t").textContent=filt?"No tickets match":(view==="chats"?"No chats yet":"No tickets yet");
+  $("empty-s").textContent=filt?"Try clearing the filters or searching for something else.":"New requests will appear here.";
+ }
+ $("count").textContent=list.length+(list.length===1?" result":" results");
 }
 ["fsite","ftype","fstatus"].forEach(function(i){$(i).addEventListener("change",loadTickets)});
+$("fq").addEventListener("input",renderRows);
+$("fclear").addEventListener("click",function(){$("fq").value="";$("fsite").value="";$("ftype").value="";$("fstatus").value="";loadTickets()});
+document.querySelectorAll("th[data-k]").forEach(function(th){th.querySelector("button").addEventListener("click",function(){
+ var k=th.dataset.k;if(sortK===k)sortD=-sortD;else{sortK=k;sortD=1}
+ document.querySelectorAll("th[data-k]").forEach(function(o){var on=o.dataset.k===sortK;o.setAttribute("aria-sort",on?(sortD>0?"ascending":"descending"):"none");o.querySelector(".ar").textContent=on?(sortD>0?"\u2191":"\u2193"):"\u21C5"});
+ renderRows();
+})});
 
+/* slide-over */
+function closeDetail(){$("detail").classList.add("off");$("scrim").classList.add("hide");current=null;if(lastFocus)lastFocus.focus()}
 async function openTicket(t){
+ lastFocus=document.activeElement;
  current=t;existingDraft=null;
  $("dtitle").textContent=t.number+": "+t.site_name;
+ var bd=$("dbadges");bd.textContent="";bd.appendChild(badge(t.status));bd.appendChild(el("span",t.type,"badge b-closed"));bd.lastChild.style.marginLeft=".3rem";
+ if(t.health_flag)bd.appendChild(el("span","\u26A0 Health flag","badge b-health"));
  $("dhealth").classList.toggle("hide",!t.health_flag);
- $("dmeta").textContent="Type: "+t.type+" | Status: "+t.status+" | Created: "+when(t.created_at)+" | Updated: "+when(t.updated_at)+(t.resolved_at?" | Resolved: "+when(t.resolved_at):"")+(t.closed_at?" | Closed: "+when(t.closed_at):"");
+ $("dcre").textContent=when(t.created_at);$("dupd").textContent=when(t.updated_at);
+ ["dresl","dres"].forEach(function(i){$(i).classList.toggle("hide",!t.resolved_at)});if(t.resolved_at)$("dres").textContent=when(t.resolved_at);
+ ["dclol","dclo"].forEach(function(i){$(i).classList.toggle("hide",!t.closed_at)});if(t.closed_at)$("dclo").textContent=when(t.closed_at);
  var hidden=t.body==null&&t.subject==null;
- $("dreq").textContent=hidden?"(hidden for your role)":[t.requester_name,t.requester_email,t.requester_role?"("+t.requester_role+")":""].filter(Boolean).join(" ");
+ $("dreq").textContent=hidden?"(hidden for your role)":([t.requester_name,t.requester_email,t.requester_role?"("+t.requester_role+")":""].filter(Boolean).join(" ")||"-");
  $("dsub").textContent=t.subject||"-";
- $("dbody").textContent=t.body||"";
+ $("dbody").textContent=t.body||"(no message to show)";
  $("dflags").textContent=(t.redaction_flags&&t.redaction_flags.length?"Redaction flags: "+t.redaction_flags.join(", ")+". ":"")+(t.page_path?"Page: "+t.page_path:"");
  $("dtext").value="";$("dmsg").textContent="";
- $("detail").classList.remove("hide");
- $("detail").scrollIntoView({behavior:"smooth"});
+ $("detail").classList.remove("off");$("scrim").classList.remove("hide");$("detail").focus();
  if(canWrite()){
   var r=await sb.from("reply_drafts").select("id,channel,body,updated_at").eq("ticket_id",t.id).eq("author_id",me.id).maybeSingle();
   if(current!==t)return;
   if(r.data){existingDraft=r.data;$("dtext").value=r.data.body;$("dchan").value=r.data.channel;$("dmsg").textContent="Draft last saved "+when(r.data.updated_at)}
  }
 }
-$("dclose").addEventListener("click",function(){$("detail").classList.add("hide");current=null});
+$("dclose").addEventListener("click",closeDetail);
+$("scrim").addEventListener("click",closeDetail);
+document.addEventListener("keydown",function(e){if(e.key==="Escape"&&current)closeDetail()});
 $("dsave").addEventListener("click",async function(){
  if(!current||!canWrite())return;
  var body=$("dtext").value.trim();
@@ -231,32 +412,33 @@ $("ddel").addEventListener("click",async function(){
  existingDraft=null;$("dtext").value="";$("dmsg").textContent="Draft deleted.";
 });
 
+/* staff */
 async function loadUsers(){
  var r=await sb.from("staff_users").select("id,email,role,active,created_at").order("email");
  if(r.error){$("umsg").textContent="Could not load staff.";return}
  var b=$("urows");b.textContent="";
  (r.data||[]).forEach(function(u){
-  var tr=document.createElement("tr");
-  tr.appendChild(el("td",u.email));
-  var rt=el("td");var sel=document.createElement("select");
-  ["owner","agent","viewer"].forEach(function(x){var o=el("option",x);o.value=x;if(x===u.role)o.selected=true;sel.appendChild(o)});
-  sel.disabled=u.email===me.email;
+  var tr=document.createElement("tr"),self=u.email===me.email;
+  var e=el("td",u.email);if(self)e.appendChild(el("span"," (you)","note"));tr.appendChild(e);
+  var rt=el("td");var sel=document.createElement("select");sel.setAttribute("aria-label","Role for "+u.email);sel.style.width="auto";
+  [["owner","Owner"],["agent","Agent"],["viewer","Viewer"]].forEach(function(x){var o=el("option",x[1]);o.value=x[0];if(x[0]===u.role)o.selected=true;sel.appendChild(o)});
+  sel.disabled=self;
   sel.addEventListener("change",async function(){
    var e=await sb.from("staff_users").update({role:sel.value,updated_at:new Date().toISOString()}).eq("id",u.id);
    $("umsg").textContent=e.error?"Could not change role.":"Role updated.";if(e.error)loadUsers();
   });
   rt.appendChild(sel);tr.appendChild(rt);
-  var at=el("td");var cb=document.createElement("input");cb.type="checkbox";cb.checked=u.active;cb.style.width="auto";cb.disabled=u.email===me.email;
-  cb.setAttribute("aria-label","Active");
+  var at=el("td");var lab=el("label",null,"sw");lab.style.margin="0";var cb=document.createElement("input");cb.type="checkbox";cb.checked=u.active;cb.disabled=self;
+  var tx=el("span",u.active?"Active":"Disabled");
   cb.addEventListener("change",async function(){
    var e=await sb.from("staff_users").update({active:cb.checked,updated_at:new Date().toISOString()}).eq("id",u.id);
-   $("umsg").textContent=e.error?"Could not update.":"Updated.";if(e.error)loadUsers();
+   $("umsg").textContent=e.error?"Could not update.":"Updated.";if(e.error)loadUsers();else tx.textContent=cb.checked?"Active":"Disabled";
   });
-  at.appendChild(cb);tr.appendChild(at);
-  tr.appendChild(el("td",when(u.created_at)));
+  lab.appendChild(cb);lab.appendChild(tx);at.appendChild(lab);tr.appendChild(at);
+  tr.appendChild(el("td",when(u.created_at),"note"));
   var rm=el("td");
-  if(u.email!==me.email){
-   var bt=el("button","Remove","sec");bt.style.margin="0";bt.type="button";
+  if(!self){
+   var bt=el("button","Remove","btn danger");bt.type="button";
    bt.addEventListener("click",async function(){
     if(!confirm("Remove "+u.email+" from staff?"))return;
     var e=await sb.from("staff_users").delete().eq("id",u.id);

@@ -5,42 +5,54 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>FAQ | Arke Online Support</title>
 <style>
-:root{--bg:#f6f8fa;--card:#fff;--ink:#1d2733;--mute:#5b6775;--accent:#1f6f8b;--line:#dde3ea}
+:root{--bg:#f3f7f8;--card:#fff;--ink:#14262e;--mute:#4c606a;--accent:#0f6a7e;--accent-d:#0b5263;--accent-l:#e3f1f4;--line:#d3dfe3;--r:12px}
 *{box-sizing:border-box}
-body{margin:0;font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--ink);background:var(--bg)}
-header{background:var(--accent);color:#fff;padding:2rem 1rem;text-align:center}
-header h1{margin:0 0 .25rem;font-size:1.8rem}
-header p{margin:0 0 1rem;opacity:.9}
-#search{width:100%;max-width:520px;padding:.8rem 1rem;border:0;border-radius:8px;font-size:1rem}
-main{max-width:900px;margin:0 auto;padding:1rem}
-h2{margin:1.5rem 0 .75rem}
-.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.75rem}
-.tile{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:1rem;text-decoration:none;color:inherit}
-.tile:hover,.tile:focus{border-color:var(--accent)}
-.tile h3{margin:0 0 .3rem;font-size:1rem}
-.tile span{color:var(--accent);font-size:.85rem}
-.prod{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:.25rem 1rem 1rem;margin:1rem 0}
-details{border-top:1px solid var(--line);padding:.6rem 0}
-summary{cursor:pointer;font-weight:600}
-details p{margin:.5rem 0 0;color:var(--mute)}
-footer{text-align:center;color:var(--mute);padding:2rem 1rem;font-size:.9rem}
-footer a,.back{color:var(--accent)}
+body{margin:0;font:1rem/1.6 system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg)}
+a{color:var(--accent)}
+:focus-visible{outline:3px solid #f5a524;outline-offset:2px}
+.top{background:var(--card);border-bottom:1px solid var(--line)}
+.top div{max-width:720px;margin:0 auto;padding:.9rem 1rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.brand{font-weight:700;letter-spacing:-.01em;display:flex;align-items:center;gap:.55rem;color:var(--ink);text-decoration:none}
+.dot{width:.9rem;height:.9rem;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px var(--accent-l)}
+main{max-width:720px;margin:0 auto;padding:1.5rem 1rem 3rem}
+h1{font-size:clamp(1.6rem,5vw,2.1rem);line-height:1.2;letter-spacing:-.02em;margin:.5rem 0 .4rem}
+.lead{color:var(--mute);margin:0 0 1.25rem}
+#q{width:100%;padding:.75rem .9rem;border:1px solid #8aa0a9;border-radius:999px;font:inherit;min-height:46px;background:#fff;color:var(--ink)}
+#q:focus{border-color:var(--accent);outline:3px solid #f5a524;outline-offset:0}
+h2{margin:2rem 0 .6rem;font-size:1.15rem;letter-spacing:-.01em}
+.prod{background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+details{border-top:1px solid var(--line)}
+details:first-child{border-top:0}
+summary{cursor:pointer;font-weight:600;padding:.9rem 2.5rem .9rem 1rem;list-style:none;position:relative;min-height:44px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";position:absolute;right:1rem;top:.7rem;font-size:1.3rem;color:var(--accent);line-height:1.2}
+details[open] summary::after{content:"\2212"}
+details[open] summary{background:var(--accent-l)}
+summary:hover{background:#f0f7f9}
+details p{margin:0;padding:.8rem 1rem 1rem;color:var(--mute)}
+.none{color:var(--mute);margin-top:1.5rem}
+.help{margin-top:2rem;background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:1.25rem}
+.help h2{margin-top:0}
+.btn{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;font-weight:600;padding:.75rem 1.4rem;border-radius:999px;min-height:46px}
+.btn:hover{background:var(--accent-d)}
+footer{text-align:center;color:var(--mute);padding:0 1rem 2rem;font-size:.9rem}
 </style>
 </head>
 <body>
-<header>
-<h1>Frequently asked questions</h1>
-<p>Arke Online Support</p>
-</header>
+<div class="top"><div><a class="brand" href="/"><span class="dot" aria-hidden="true"></span>Arke Online Support</a><a href="/">Contact form</a></div></div>
 <main>
-<p><a class="back" href="/">&larr; Back to Arke Online Support</a></p>
-<h2>Aliquot</h2>
+<h1>Frequently asked questions</h1>
+<p class="lead">Quick answers for Arke Online Support.</p>
+<label for="q" class="sr" style="position:absolute;left:-9999px">Search the FAQ</label>
+<input id="q" type="search" placeholder="Search questions" autocomplete="off">
+<div id="list">
+<section><h2>Aliquot</h2>
 <div class="prod">
 <details><summary>Where can I find shipping and returns information?</summary><p>Compounded products can't be returned for change of mind, but this does not limit your rights under the Australian Consumer Law. Full details are on the Shipping &amp; Returns page of the Aliquot site.</p></details>
 <details><summary>Who do I contact about billing or refunds?</summary><p>Please contact us using the form on the Aliquot Contact page.</p></details>
 <details><summary>Who do I contact for anything else?</summary><p>Use the form on the Aliquot Contact page, which the team answers within two business days (Mon to Fri, 9 am to 5 pm AEST), or email info@aliquotcompound.com. For medical questions, contact your practitioner.</p></details>
-</div>
-<h2>Precisely Skin</h2>
+</div></section>
+<section><h2>Precisely Skin</h2>
 <div class="prod">
 <details><summary>Do I need an account as a client?</summary><p>No. Clients do not need an account. Your consultant or clinic runs the assessment for you.</p></details>
 <details><summary>How does my consultant sign in, and how do they reset their access?</summary><p>Consultants use the Consultant sign in link on the home page. On that page they can request an email reset link, and if the address has an account the link is sent.</p></details>
@@ -48,19 +60,34 @@ footer a,.back{color:var(--accent)}
 <details><summary>How are orders placed and tracked?</summary><p>Products are supplied through your clinic on your practitioner's authorisation, not sold direct to the public. Clinics place orders from a completed client report and track status from the Orders page. For your order status, ask your clinic.</p></details>
 <details><summary>Who do I contact about privacy or my records?</summary><p>Contact the clinic that did your assessment first, and they can arrange access, correction or a new report link. They can escalate to Precisely Skin if needed.</p></details>
 <details><summary>I have a skin or health concern. What should I do?</summary><p>Please contact your practitioner. Precisely Skin is not a medical service and cannot give medical advice.</p></details>
-</div>
-<h2>Bloodwork Studio</h2>
+</div></section>
+<section><h2>Bloodwork Studio</h2>
 <div class="prod">
 <details><summary>How do practitioners sign in?</summary><p>Use Practitioner sign in at the top of the Bloodwork Studio site. Practitioners can also create an account there, after agreeing to the Practitioner Terms &amp; Conditions.</p></details>
 <details><summary>How do I reset my sign-in details?</summary><p>On the sign-in page, choose the reset link, enter your email and a link will be sent. Check your junk folder too.</p></details>
 <details><summary>Where do reports and their status appear?</summary><p>Practitioners find reports on their Dashboard and Report status pages once uploaded. Signed reports are locked, and any change creates a new version.</p></details>
 <details><summary>What do my results mean?</summary><p>Please contact your practitioner, as we can't give medical advice. The site shows general information only.</p></details>
+</div></section>
 </div>
+<p class="none" id="none" hidden role="status">No questions match your search. Try another word, or use the contact form below.</p>
+<div class="help">
 <h2>Still need help?</h2>
-<p>Send us a request using the <a class="back" href="/#contact">contact form</a> and we will reply within one business day (Brisbane time). Please do not include passwords, PINs or health details.</p>
+<p>Send us a request using the contact form and we will reply within one business day (Brisbane time). Please do not include passwords, PINs or health details.</p>
+<a class="btn" href="/#contact">Contact us</a>
+</div>
 </main>
-<footer>
-<p><a href="/">Contact form</a></p>
-</footer>
+<footer><p>We reply within one business day (Brisbane time).</p></footer>
+<script>
+(function(){
+var q=document.getElementById("q"),secs=document.querySelectorAll("#list section"),none=document.getElementById("none");
+q.addEventListener("input",function(){
+ var t=q.value.toLowerCase().trim(),any=false;
+ secs.forEach(function(s){var n=0;
+  s.querySelectorAll("details").forEach(function(d){var m=!t||d.textContent.toLowerCase().indexOf(t)>-1;d.hidden=!m;if(m)n++;if(t&&m)d.open=true;if(!t)d.open=false;});
+  s.hidden=n===0;if(n)any=true;});
+ none.hidden=any;
+});
+})();
+</script>
 </body>
 </html>
