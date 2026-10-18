@@ -59,6 +59,16 @@ footer{text-align:center;color:var(--mute);padding:0 1rem 7rem;font-size:.9rem}
 #chat .f{margin-bottom:.7rem}
 #chat .warn{font-size:.85rem;padding:.55rem .7rem;margin-bottom:.8rem}
 #chat textarea{min-height:0}
+.vrow{display:flex;gap:.5rem;align-items:flex-start}.vrow textarea{flex:1}
+.mic{flex:none;width:44px;height:44px;min-height:44px;padding:0;border-radius:50%;border:1px solid #8aa0a9;background:#fff;color:var(--accent);display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
+.mic[hidden],.vtog[hidden],.vnote[hidden]{display:none}
+.mic:focus-visible,.vtog input:focus-visible{outline:3px solid #f5a524;outline-offset:2px}
+.mic[aria-pressed="true"]{background:#b3261e;border-color:#b3261e;color:#fff;animation:vpulse 1.2s infinite}
+.vstat{font-size:.85rem;color:var(--accent);margin:.3rem 0 0;min-height:1.1em}
+.vnote{font-size:.85rem;background:#eef6f8;border:1px solid var(--line);border-radius:8px;padding:.5rem .7rem;margin:.4rem 0}
+.vtog{display:flex;align-items:center;gap:.6rem;min-height:44px;font-size:.9rem;cursor:pointer}.vtog input{width:24px;height:24px;min-height:0;flex:none}
+@keyframes vpulse{0%{box-shadow:0 0 0 0 rgba(179,38,30,.5)}100%{box-shadow:0 0 0 12px rgba(179,38,30,0)}}
+@media(prefers-reduced-motion:reduce){.mic[aria-pressed="true"]{animation:none}}
 #chat-log{height:240px;overflow-y:auto;border:1px solid var(--line);border-radius:10px;padding:.5rem;margin-bottom:.6rem;background:var(--bg)}
 .m{max-width:85%;padding:.45rem .7rem;border-radius:14px;margin:.3rem 0;white-space:pre-wrap;overflow-wrap:anywhere;font-size:.95rem}
 .m.you{background:var(--accent);color:#fff;margin-left:auto;border-bottom-right-radius:4px}
@@ -127,7 +137,7 @@ footer{text-align:center;color:var(--mute);padding:0 1rem 7rem;font-size:.9rem}
 <div class="f"><label for="c-email">Email</label>
 <input id="c-email" type="email" autocomplete="email"></div>
 <div class="f"><label for="c-msg">Message</label>
-<textarea id="c-msg" rows="3" maxlength="1000"></textarea></div>
+<div class="vrow"><textarea id="c-msg" rows="3" maxlength="1000"></textarea><button type="button" class="mic" hidden aria-pressed="false" aria-label="Speak your message" data-for="c-msg"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button></div><p class="vstat" role="status" aria-live="polite" data-stat="c-msg"></p></div>
 <div class="hp" aria-hidden="true"><label for="c-web">Leave this field empty</label><input id="c-web" type="text" tabindex="-1" autocomplete="off"></div>
 <div id="ts-chat" style="margin-bottom:.7rem"></div>
 <button type="submit" id="chat-start" class="btn">Start chat</button>
@@ -136,10 +146,12 @@ footer{text-align:center;color:var(--mute);padding:0 1rem 7rem;font-size:.9rem}
 <p class="note" style="margin:0 0 .5rem">Ticket <strong id="c-num"></strong>. Keep this number if you contact us again. Replies appear here while this page is open.</p>
 <div id="chat-log" role="log" aria-live="polite"></div>
 <form id="chat-send-form" novalidate>
-<textarea id="c-reply" rows="2" maxlength="1000" aria-label="Your message"></textarea>
+<div class="vrow"><textarea id="c-reply" rows="2" maxlength="1000" aria-label="Your message"></textarea><button type="button" class="mic" hidden aria-pressed="false" aria-label="Speak your message" data-for="c-reply"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button></div><p class="vstat" role="status" aria-live="polite" data-stat="c-reply"></p>
 <button type="submit" id="chat-send" class="btn" style="margin-top:.5rem">Send</button>
 </form>
 </div>
+<p class="vnote" id="v-note" role="note" hidden>Your browser may send your voice to its speech service. Please don't say passwords, PINs or medical details.</p>
+<label class="vtog" id="v-tog" hidden><input type="checkbox" id="v-read" role="switch"> Read replies aloud</label>
 <p class="err" id="chat-err" role="alert" hidden></p>
 </div>
 </section>
@@ -195,7 +207,7 @@ var ERR={validation:"Please check your details and try again.",turnstile:"The sp
 var st={session:null,after:null,seen:{},timer:null};
 function showErr(m){var e=$("chat-err");e.textContent=m||"";e.hidden=!m;}
 function post(path,body){return fetch(API_BASE_URL+path,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(body)}).then(function(r){return r.json().catch(function(){return{};}).then(function(j){return{s:r.status,j:j};});});}
-function addMsg(m){if(st.seen[m.id])return;st.seen[m.id]=1;var d=document.createElement("div");d.className="m "+m.from;d.textContent=m.body;$("chat-log").appendChild(d);$("chat-log").scrollTop=1e9;if(!st.after||m.at>st.after)st.after=m.at;}
+function addMsg(m){if(st.seen[m.id])return;st.seen[m.id]=1;var d=document.createElement("div");d.className="m "+m.from;d.textContent=m.body;if(m.from==="support"&&window.arkeSpeak)window.arkeSpeak(m.body);$("chat-log").appendChild(d);$("chat-log").scrollTop=1e9;if(!st.after||m.at>st.after)st.after=m.at;}
 function save(num){try{sessionStorage.setItem(KEY,JSON.stringify({s:st.session,n:num}));}catch(e){}}
 function goLive(num){$("c-num").textContent=num;$("chat-start-form").hidden=true;$("chat-live").hidden=false;save(num);poll();}
 function poll(){clearTimeout(st.timer);if(!st.session||$("chat").hidden)return;
@@ -224,6 +236,34 @@ $("chat-send-form").addEventListener("submit",function(e){e.preventDefault();sho
   if(o.s===200){$("c-reply").value="";addMsg({id:o.j.message_id||("l"+Date.now()),from:"you",body:t,at:""});if(o.j.health_warning)showErr("Your message may include health details. Please do not share them here.");}
   else showErr(ERR[o.j&&o.j.error]||ERR.server);
  }).catch(function(){showErr(ERR.server);}).then(function(){b.disabled=false;});});
+})();
+
+// ---- Browser-native voice (Web Speech API; nothing recorded or sent by us) ----
+(function(){
+var SR=window.SpeechRecognition||window.webkitSpeechRecognition,TTS=("speechSynthesis" in window)&&window.SpeechSynthesisUtterance;
+var mics=[].slice.call(document.querySelectorAll(".mic")),note=document.getElementById("v-note"),tog=document.getElementById("v-tog"),rd=document.getElementById("v-read");
+var active=null,seen=false;
+function stat(id,t){var e=document.querySelector('[data-stat="'+id+'"]');if(e)e.textContent=t;}
+function stop(){if(active&&active.rec){try{active.rec.stop();}catch(e){}}}
+function reset(b){b.setAttribute("aria-pressed","false");b.setAttribute("aria-label","Speak your message");stat(b.getAttribute("data-for"),"");if(active&&active.b===b)active=null;}
+if(SR){mics.forEach(function(b){b.hidden=false;b.addEventListener("click",function(){
+ if(active&&active.b===b){stop();return;}
+ if(active){stop();}
+ var ta=document.getElementById(b.getAttribute("data-for")),id=b.getAttribute("data-for");
+ if(!seen){seen=true;note.hidden=false;}
+ var rec=new SR();rec.lang="en-AU";rec.interimResults=false;rec.continuous=false;rec.maxAlternatives=1;
+ var base=ta.value,got=false;
+ rec.onstart=function(){b.setAttribute("aria-pressed","true");b.setAttribute("aria-label","Stop listening");stat(id,"Listening… speak now, then review before sending.");};
+ rec.onresult=function(ev){var t="";for(var i=ev.resultIndex;i<ev.results.length;i++){t+=ev.results[i][0].transcript;}t=t.trim();if(!t)return;got=true;
+  var v=(base&&!/\s$/.test(base)?base+" ":base)+t;var max=ta.maxLength>0?ta.maxLength:1e9;ta.value=v.slice(0,max);base=ta.value;ta.dispatchEvent(new Event("input",{bubbles:true}));};
+ rec.onerror=function(ev){var m={"not-allowed":"Microphone access was blocked. You can type your message instead.","service-not-allowed":"Voice input is not available in this browser. You can type instead.","no-speech":"We did not hear anything. Please try again.","audio-capture":"No microphone was found."}[ev.error];if(m)stat(id,m);got=got||!!m;};
+ rec.onend=function(){var keep=document.querySelector('[data-stat="'+id+'"]').textContent;reset(b);if(got&&keep&&keep.indexOf("Listening")!==0)stat(id,keep);else if(got)stat(id,"Check your message, then press Send.");ta.focus();};
+ active={b:b,rec:rec};
+ try{rec.start();}catch(e){reset(b);}
+});});}
+if(TTS){tog.hidden=false;rd.addEventListener("change",function(){if(!rd.checked)speechSynthesis.cancel();});
+ window.addEventListener("pagehide",function(){speechSynthesis.cancel();});
+ window.arkeSpeak=function(text){if(!rd.checked)return;var u=new SpeechSynthesisUtterance(text);u.lang="en-AU";var vs=speechSynthesis.getVoices(),v=null;for(var i=0;i<vs.length;i++){if(vs[i].lang&&vs[i].lang.replace("_","-").toLowerCase()==="en-au"){v=vs[i];break;}}if(v)u.voice=v;speechSynthesis.speak(u);};}
 })();
 </script>
 </body>
