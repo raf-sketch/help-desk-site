@@ -47,12 +47,7 @@ footer{text-align:center;color:var(--mute);padding:2rem 1rem;font-size:.9rem}
 </header>
 <main>
 <h2>Pick your product</h2>
-<div class="tiles">
-<a class="tile" href="#faq-aliquot" data-site="aliquot"><h3>Aliquot</h3><span>View FAQs</span></a>
-<a class="tile" href="#faq-precisely" data-site="precisely"><h3>Precisely Skin</h3><span>View FAQs</span></a>
-<a class="tile" href="#faq-bloodwork" data-site="bloodwork"><h3>Bloodwork Studio / Optimal DX</h3><span>View FAQs</span></a>
-<a class="tile" href="#faq-peptidedoctor" data-site="peptidedoctor"><h3>Peptide Doctor</h3><span>View FAQs</span></a>
-</div>
+<select id="pick" aria-label="Pick your product"><option value="">Select a product to see its FAQs</option><option value="aliquot">Aliquot</option><option value="precisely">Precisely Skin</option><option value="bloodwork">Bloodwork Studio</option></select>
 <div id="faqs">
 <section class="prod" id="faq-aliquot"><h2>Aliquot</h2>
 <details><summary>What is Aliquot?</summary><p>Aliquot is its own separate business.</p></details>
@@ -67,14 +62,8 @@ footer{text-align:center;color:var(--mute);padding:2rem 1rem;font-size:.9rem}
 <details><summary>Where do I find my report?</summary><p>We do not have verified details for this yet. Contact us below and we will help.</p></details>
 <details><summary>I have a billing or refund question</summary><p>Contact us below.</p></details>
 </section>
-<section class="prod" id="faq-bloodwork"><h2>Bloodwork Studio / Optimal DX</h2>
-<details><summary>What is Bloodwork Studio?</summary><p>Bloodwork Studio / Optimal DX includes a patient app.</p></details>
-<details><summary>I cannot log in</summary><p>We do not have verified details for this yet. Contact us below and we will help.</p></details>
-<details><summary>Where is my order?</summary><p>We do not have verified details for this yet. Contact us below and we will help.</p></details>
-<details><summary>Where do I find my report?</summary><p>We do not have verified details for this yet. Contact us below and we will help.</p></details>
-<details><summary>I have a billing or refund question</summary><p>Contact us below.</p></details>
-</section>
-<section class="prod" id="faq-peptidedoctor"><h2>Peptide Doctor</h2>
+<section class="prod" id="faq-bloodwork"><h2>Bloodwork Studio</h2>
+<details><summary>What is Bloodwork Studio?</summary><p>Bloodwork Studio includes a patient app.</p></details>
 <details><summary>I cannot log in</summary><p>We do not have verified details for this yet. Contact us below and we will help.</p></details>
 <details><summary>Where is my order?</summary><p>We do not have verified details for this yet. Contact us below and we will help.</p></details>
 <details><summary>Where do I find my report?</summary><p>We do not have verified details for this yet. Contact us below and we will help.</p></details>
@@ -86,7 +75,7 @@ footer{text-align:center;color:var(--mute);padding:2rem 1rem;font-size:.9rem}
 <div id="success" class="ok" hidden role="status"><strong>Thank you. Your ticket number is <span id="tnum"></span>.</strong><p>We have emailed you a confirmation. Please keep the number if you contact us again.</p><p class="note">Reminder: do not send passwords, PINs or health details by email or in a follow-up.</p><p id="hw" hidden class="warn">Your message may include health details. We only ask for technical information. Please do not send health details in future messages.</p></div>
 <form id="cform" novalidate>
 <label for="site">Which site</label>
-<select id="site" name="site" required><option value="">Select a site</option><option value="aliquot">Aliquot</option><option value="precisely">Precisely Skin</option><option value="bloodwork">Bloodwork Studio / Optimal DX</option><option value="peptidedoctor">Peptide Doctor</option></select>
+<select id="site" name="site" required><option value="">Select a site</option><option value="aliquot">Aliquot</option><option value="precisely">Precisely Skin</option><option value="bloodwork">Bloodwork Studio</option></select>
 <label for="role">Your role</label>
 <select id="role" name="role" required><option value="">Select your role</option><option>patient</option><option>practitioner</option><option>pharmacist</option><option>admin</option><option>other</option></select>
 <label for="type">Issue type</label>
@@ -114,7 +103,7 @@ footer{text-align:center;color:var(--mute);padding:2rem 1rem;font-size:.9rem}
 // Placeholder: replace with https://otzizwvltiiaaimjnwzd.supabase.co/functions/v1 at go-live, after Raf approves.
 var API_BASE_URL="https://otzizwvltiiaaimjnwzd.supabase.co/functions/v1";
 (function(){
-var names={"aliquot":"Aliquot","precisely":"Precisely Skin","bloodwork":"Bloodwork Studio / Optimal DX","peptidedoctor":"Peptide Doctor"};
+var names={"aliquot":"Aliquot","precisely":"Precisely Skin","bloodwork":"Bloodwork Studio"};
 var site=document.getElementById("site");
 var p=new URLSearchParams(location.search).get("site");
 if(p){p=p.toLowerCase();if(names[p])site.value=p;}
@@ -132,9 +121,13 @@ s.addEventListener("input",function(){
  });
  document.getElementById("none").style.display=any?"none":"block";
 });
-document.querySelectorAll(".tile").forEach(function(t){
- t.addEventListener("click",function(){site.value=t.getAttribute("data-site");});
-});
+var pick=document.getElementById("pick");
+function showProd(){
+ var v=pick.value;
+ document.querySelectorAll(".prod").forEach(function(sec){sec.style.display=(!v||sec.id==="faq-"+v)?"":"none";});
+ if(v)site.value=v;
+}
+pick.addEventListener("change",showProd);
 var form=document.getElementById("cform"),err=document.getElementById("err"),btn=document.getElementById("send");
 var MSGS={validation:"Please check the form fields and try again.",turnstile:"The spam check failed. Please try again.",rate_limited:"Too many requests. Please try again later.",server:"Something went wrong on our side. Please try again shortly."};
 form.addEventListener("submit",function(e){
