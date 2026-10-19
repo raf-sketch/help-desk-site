@@ -97,6 +97,7 @@ td.sub2{max-width:340px;overflow:hidden;text-overflow:ellipsis;white-space:nowra
 .draft h3{margin:0 0 .6rem;font-size:1rem;display:flex;gap:.5rem;align-items:center;flex-wrap:wrap}
 .tag{font-size:.75rem;background:var(--ok-bg);color:var(--ok);border:1px solid #8bcf9f;border-radius:99px;padding:.1rem .6rem;font-weight:700}
 .draft .row2{display:grid;grid-template-columns:140px 1fr;gap:.75rem;margin-bottom:.75rem}
+.statusbox{display:flex;gap:.75rem;align-items:end;flex-wrap:wrap;margin:0 0 1rem;padding:.8rem 1rem;border:1px solid var(--line);border-radius:var(--r);background:#f8fbfc}.statusbox>div{flex:1;min-width:160px}
 .acts{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin-top:.75rem}
 /* staff */
 .add{display:grid;grid-template-columns:2fr 1fr auto;gap:.75rem;align-items:end;padding:1rem;border-top:1px solid var(--line)}
@@ -218,6 +219,13 @@ td.sub2{max-width:340px;overflow:hidden;text-overflow:ellipsis;white-space:nowra
 <label>Message</label>
 <pre class="msgbox" id="dbody"></pre>
 <p class="note" id="dflags"></p>
+<div id="statusbox" class="statusbox">
+<div><label for="dstatus">Status</label>
+<select id="dstatus"><option value="new">New</option><option value="open">Open</option><option value="waiting">Waiting</option><option value="resolved">Resolved</option><option value="closed">Closed</option></select></div>
+<div><button id="dreplied" type="button" class="btn sec">Mark as replied</button></div>
+<p class="note" style="margin:0;flex-basis:100%">Closing a ticket starts the 24 month retention clock. &ldquo;Mark as replied&rdquo; records that you sent your reply yourself and sets the status to Waiting. Nothing is emailed from this page.</p>
+<span id="smsg" class="note" role="status" style="flex-basis:100%"></span>
+</div>
 <div id="draftbox" class="draft">
 <h3>Reply draft <span class="tag">Draft only, nothing is sent</span></h3>
 <div class="row2"><div><label for="dchan">Channel</label>
@@ -270,7 +278,7 @@ async function boot(){
  $("whotxt").textContent=email+" ("+me.role+")";
  show("app");
  if(me.role==="owner"){$("nav-staff").classList.remove("hide");loadUsers()}
- if(!canWrite())$("draftbox").classList.add("hide");
+ if(!canWrite()){$("draftbox").classList.add("hide");$("statusbox").classList.add("hide")}
  loadOverview();loadTickets();
 }
 
@@ -370,9 +378,7 @@ document.querySelectorAll("th[data-k]").forEach(function(th){th.querySelector("b
 
 /* slide-over */
 function closeDetail(){$("detail").classList.add("off");$("scrim").classList.add("hide");current=null;if(lastFocus)lastFocus.focus()}
-async function openTicket(t){
- lastFocus=document.activeElement;
- current=t;existingDraft=null;
+function paintHead(t){
  $("dtitle").textContent=t.number+": "+t.site_name;
  var bd=$("dbadges");bd.textContent="";bd.appendChild(badge(t.status));bd.appendChild(el("span",t.type,"badge b-closed"));bd.lastChild.style.marginLeft=".3rem";
  if(t.health_flag)bd.appendChild(el("span","\u26A0 Health flag","badge b-health"));
@@ -380,12 +386,18 @@ async function openTicket(t){
  $("dcre").textContent=when(t.created_at);$("dupd").textContent=when(t.updated_at);
  ["dresl","dres"].forEach(function(i){$(i).classList.toggle("hide",!t.resolved_at)});if(t.resolved_at)$("dres").textContent=when(t.resolved_at);
  ["dclol","dclo"].forEach(function(i){$(i).classList.toggle("hide",!t.closed_at)});if(t.closed_at)$("dclo").textContent=when(t.closed_at);
+ $("dstatus").value=t.status;
+}
+async function openTicket(t){
+ lastFocus=document.activeElement;
+ current=t;existingDraft=null;
+ paintHead(t);
  var hidden=t.body==null&&t.subject==null;
  $("dreq").textContent=hidden?"(hidden for your role)":([t.requester_name,t.requester_email,t.requester_role?"("+t.requester_role+")":""].filter(Boolean).join(" ")||"-");
  $("dsub").textContent=t.subject||"-";
  $("dbody").textContent=t.body||"(no message to show)";
  $("dflags").textContent=(t.redaction_flags&&t.redaction_flags.length?"Redaction flags: "+t.redaction_flags.join(", ")+". ":"")+(t.page_path?"Page: "+t.page_path:"");
- $("dtext").value="";$("dmsg").textContent="";
+ $("dtext").value="";$("dmsg").textContent="";$("smsg").textContent="";
  $("detail").classList.remove("off");$("scrim").classList.remove("hide");$("detail").focus();
  if(canWrite()){
   var r=await sb.from("reply_drafts").select("id,channel,body,updated_at").eq("ticket_id",t.id).eq("author_id",me.id).maybeSingle();
@@ -396,6 +408,30 @@ async function openTicket(t){
 $("dclose").addEventListener("click",closeDetail);
 $("scrim").addEventListener("click",closeDetail);
 document.addEventListener("keydown",function(e){if(e.key==="Escape"&&current)closeDetail()});
+async function afterStatus(id,msg){
+ await loadTickets();
+ var nt=tickets.filter(function(x){return x.id===id})[0];
+ if(nt&&current&&current.id===id){current=nt;paintHead(nt)}
+ $("smsg").textContent=msg;
+}
+$("dstatus").addEventListener("change",async function(){
+ if(!current||!canWrite())return;
+ var want=$("dstatus").value,id=current.id;
+ if(want==="closed"&&!confirm("Close this ticket? It will be kept for 24 months from now, then deleted."))return paintHead(current);
+ $("dstatus").disabled=true;
+ var r=await sb.rpc("staff_set_ticket_status",{p_ticket_id:id,p_status:want});
+ $("dstatus").disabled=false;
+ if(r.error){$("smsg").textContent="Could not change the status.";paintHead(current);return}
+ afterStatus(id,"Status set to "+want+".");
+});
+$("dreplied").addEventListener("click",async function(){
+ if(!current||!canWrite())return;
+ var id=current.id;$("dreplied").disabled=true;
+ var r=await sb.rpc("staff_mark_replied",{p_ticket_id:id,p_channel:$("dchan").value});
+ $("dreplied").disabled=false;
+ if(r.error){$("smsg").textContent="Could not mark as replied.";return}
+ afterStatus(id,"Marked as replied. Status is now "+(r.data&&r.data.status?r.data.status:"updated")+".");
+});
 $("dsave").addEventListener("click",async function(){
  if(!current||!canWrite())return;
  var body=$("dtext").value.trim();
