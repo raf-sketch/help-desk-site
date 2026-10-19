@@ -233,8 +233,11 @@ td.sub2{max-width:340px;overflow:hidden;text-overflow:ellipsis;white-space:nowra
 <div><label for="dtext">Your draft</label>
 <textarea id="dtext" rows="7" maxlength="8000" placeholder="Write a reply for your own reference. It is saved for staff only."></textarea></div></div>
 <p class="note" style="margin:0">Drafts are saved for staff only. Nothing is sent to the requester from this page.</p>
+<p class="note" style="margin:.4rem 0 0"><b>Replies are sent from your own email; never include passwords or PINs.</b></p>
 <div class="acts">
 <button id="dsave" type="button" class="btn">Save draft</button>
+<button id="dcopy" type="button" class="btn sec">Copy reply</button>
+<button id="dmail" type="button" class="btn sec">Open in email</button>
 <button id="ddel" type="button" class="btn danger">Delete draft</button>
 <span id="dmsg" class="note" role="status"></span>
 </div>
@@ -436,10 +439,32 @@ $("dsave").addEventListener("click",async function(){
  if(!current||!canWrite())return;
  var body=$("dtext").value.trim();
  if(!body){$("dmsg").textContent="Write something first.";return}
- var row={ticket_id:current.id,tenant_id:current.tenant_id,channel:$("dchan").value,body:body,author_id:me.id,author_email:me.email,updated_at:new Date().toISOString()};
- var r=await sb.from("reply_drafts").upsert(row,{onConflict:"ticket_id,author_id"}).select("id,channel,body,updated_at").single();
- if(r.error){$("dmsg").textContent="Could not save the draft.";return}
- existingDraft=r.data;$("dmsg").textContent="Draft saved "+when(r.data.updated_at)+". Not sent.";
+ $("dsave").disabled=true;
+ var r=await sb.rpc("staff_save_reply_draft",{p_ticket_id:current.id,p_body:body,p_channel:$("dchan").value});
+ $("dsave").disabled=false;
+ if(r.error||!r.data){$("dmsg").textContent="Could not save the draft.";return}
+ existingDraft=r.data;$("dtext").value=r.data.body;$("dmsg").textContent="Draft saved "+when(r.data.updated_at)+". Not sent.";
+});
+$("dcopy").addEventListener("click",async function(){
+ var body=$("dtext").value;
+ if(!body.trim()){$("dmsg").textContent="Write something first.";return}
+ try{await navigator.clipboard.writeText(body);$("dmsg").textContent="Reply copied. Paste it into your own email.";return}catch(x){}
+ var ta=$("dtext");ta.focus();ta.select();
+ var ok=false;try{ok=document.execCommand("copy")}catch(x){}
+ $("dmsg").textContent=ok?"Reply copied. Paste it into your own email.":"Could not copy. Select the text and copy it yourself."
+});
+$("dmail").addEventListener("click",function(){
+ if(!current||!canWrite())return;
+ var to=(current.requester_email||"").trim();
+ var body=$("dtext").value;
+ if(!to||to.indexOf("@")<1){$("dmsg").textContent="No requester email is available for this ticket. Use Copy reply instead.";return}
+ if(!body.trim()){$("dmsg").textContent="Write something first.";return}
+ var sj=String(current.subject||"").replace(/\s+/g," ").trim();if(sj.length>60)sj=sj.slice(0,57).trim()+"...";
+ var subject="Re: "+current.number+(sj?" "+sj:"");
+ var url="mailto:"+encodeURIComponent(to)+"?subject="+encodeURIComponent(subject)+"&body="+encodeURIComponent(body.replace(/\r?\n/g,"\r\n"));
+ if(url.length>1800)$("dmsg").textContent="Long reply: if your email app cuts it off, use Copy reply instead.";
+ else $("dmsg").textContent="Opening your email app. Nothing is sent until you send it.";
+ location.href=url;
 });
 $("ddel").addEventListener("click",async function(){
  if(!current||!existingDraft)return;
